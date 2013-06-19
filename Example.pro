@@ -1,5 +1,5 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    Gui \
-    neuro
+    neuro \
+    Gui
