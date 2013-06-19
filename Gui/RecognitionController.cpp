@@ -1,12 +1,19 @@
 #include "RecognitionController.hpp"
 
+#include "DeltaRuleSupervisor.hpp"
+#include "RandomSupervisor.hpp"
+
 #include <QSet>
 
 RecognitionController::RecognitionController(QObject *parent):
     QObject(parent),
     m_model(new QStringListModel(this)),
-    m_size(1)
+    m_size(1),
+    m_supervisor(new DeltaRuleSupervisor(this)),
+    m_initSupervisor(new RandomSupervisor(0, 10, this))
 {
+    m_supervisor->setLearningSpeed(0.01);
+    reset();
 }
 
 QAbstractItemModel *RecognitionController::model() const
@@ -36,10 +43,24 @@ void RecognitionController::suggestSymbol(const QString &symbol)
 void RecognitionController::setSize(const int size)
 {
     m_size = size;
-    // TODO reset
+    reset();
 }
 
 void RecognitionController::setData(const DataVector &data)
 {
     m_data = data;
+}
+
+void RecognitionController::reset()
+{
+    m_neuralNetwork.clear();
+    NeuralLayer layer;
+    for (int i = 0; i < m_size; ++i)
+    {
+        Neuron neuron;
+        neuron.setWeights(WeightVector(m_size));
+        layer.pushBack(neuron);
+    }
+    m_neuralNetwork.pushBack(layer);
+    m_initSupervisor->train(m_neuralNetwork);
 }

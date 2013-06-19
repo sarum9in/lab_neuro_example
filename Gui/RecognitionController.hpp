@@ -1,6 +1,8 @@
 #pragma once
 
 #include "DataTransformation.hpp"
+#include "Supervisor.hpp"
+#include "NeuralNetwork.hpp"
 
 #include <QObject>
 #include <QStringListModel>
@@ -24,9 +26,13 @@ public slots:
     void setSize(const int size);
     void setData(const DataVector &data);
 
+    void reset();
+
 private:
     QString m_suggestedSymbol;
     QStringListModel *m_model;
     int m_size;
     DataVector m_data;
+    NeuralNetwork m_neuralNetwork;
+    Supervisor *m_supervisor, *m_initSupervisor;
 };
