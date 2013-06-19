@@ -17,13 +17,16 @@ TEMPLATE = app
 SOURCES += main.cpp\
         MainWindow.cpp \
     GridField.cpp \
-    RecognitionController.cpp
+    RecognitionController.cpp \
+    RecognitionDialog.cpp
 
 HEADERS  += MainWindow.hpp \
     GridField.hpp \
-    RecognitionController.hpp
+    RecognitionController.hpp \
+    RecognitionDialog.hpp
 
-FORMS    += MainWindow.ui
+FORMS    += MainWindow.ui \
+    RecognitionDialog.ui
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../neuro/release/ -lneuro
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../neuro/debug/ -lneuro
