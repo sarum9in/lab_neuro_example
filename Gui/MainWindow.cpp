@@ -11,9 +11,10 @@ MainWindow::MainWindow(QWidget *parent):
 {
     ui->setupUi(this);
     // Recognition
+    RecognitionController *recognitionController = new RecognitionController(this);
     ui->gridField->setSize(ui->gridSize->value());
     ui->symbolSet->setValidator(new QRegExpValidator(QRegExp("\\w*"), ui->symbolSet));
-    RecognitionController *recognitionController = new RecognitionController(this);
+    recognitionController->setSize(ui->gridSize->value());
     connect(ui->symbolSet, &QLineEdit::textChanged, recognitionController, &RecognitionController::setSymbolSet);
     connect(ui->fixRecognitionButton, &QPushButton::clicked, recognitionController, &RecognitionController::fix);
     ui->recognizedValue->setModel(recognitionController->model());
