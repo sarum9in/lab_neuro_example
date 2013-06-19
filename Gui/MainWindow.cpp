@@ -17,7 +17,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::showAbout()
 {
-    QMessageBox::about(this, tr("About"), tr("Neural networks application example for boolean functions"));
+    QMessageBox::about(this, tr("About"), tr("Neural networks application example."));
 }
 
 void MainWindow::showAboutQt()
