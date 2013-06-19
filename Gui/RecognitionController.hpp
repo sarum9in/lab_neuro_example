@@ -18,6 +18,7 @@ public:
 
 signals:
     void recognized(const QString &symbol);
+    void unrecognized();
 
 public slots:
     void suggestSymbol(const QString &symbol);

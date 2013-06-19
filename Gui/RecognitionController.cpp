@@ -75,13 +75,20 @@ void RecognitionController::recognize()
 {
     if (m_model->rowCount())
     {
+        int r = -1;
         const DataVector out = m_neuralNetwork.transform(m_data);
         for (int i = 0; i < out.size(); ++i)
             if (qRound(out[i]))
             {
-                emit recognized(m_model->stringList()[i]);
-                break;
+                if (r == -1)
+                    r = i;
+                else;
+                    emit unrecognized();
             }
+        if (r == -1)
+            emit unrecognized();
+        else
+            emit recognized(m_model->stringList()[r]);
     }
 }
 
