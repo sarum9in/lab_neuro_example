@@ -5,6 +5,7 @@
 #include "BinaryStepActivationFunction.hpp"
 
 #include <QSet>
+#include <QDebug>
 
 RecognitionController::RecognitionController(QObject *parent):
     QObject(parent),
@@ -48,7 +49,8 @@ void RecognitionController::fix()
     };
     set.push_back(example);
     m_supervisor->setTrainingSet(set);
-    m_supervisor->train(m_neuralNetwork);
+    if (!m_supervisor->trainFor(m_neuralNetwork, 1 << 20))
+        qWarning("Unable to train neural network properly."); // FIXME
     recognize();
 }
 
