@@ -82,7 +82,7 @@ void RecognitionController::recognize()
             {
                 if (r == -1)
                     r = i;
-                else;
+                else
                     emit unrecognized();
             }
         if (r == -1)
