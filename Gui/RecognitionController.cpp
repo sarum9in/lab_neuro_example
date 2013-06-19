@@ -11,7 +11,7 @@ RecognitionController::RecognitionController(QObject *parent):
     m_model(new QStringListModel(this)),
     m_size(1),
     m_supervisor(new DeltaRuleSupervisor(this)),
-    m_initSupervisor(new RandomSupervisor(0, 10, this)),
+    m_initSupervisor(new RandomSupervisor(-5, 5, this)),
     m_activationFunction(new BinaryStepActivationFunction)
 {
     m_supervisor->setLearningSpeed(0.1);
