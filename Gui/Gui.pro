@@ -16,10 +16,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         MainWindow.cpp \
-    GridField.cpp
+    GridField.cpp \
+    RecognitionController.cpp
 
 HEADERS  += MainWindow.hpp \
-    GridField.hpp
+    GridField.hpp \
+    RecognitionController.hpp
 
 FORMS    += MainWindow.ui
 
