@@ -1,0 +1,3 @@
+[submodule "neuro"]
+	path = neuro
+	url = git://github.com/sarum9in/lab_neuro.git
