@@ -26,6 +26,7 @@ public slots:
     void setSize(const int size);
     void setData(const DataVector &data);
 
+    void recognize();
     void reset();
 
 private:
@@ -35,4 +36,5 @@ private:
     DataVector m_data;
     NeuralNetwork m_neuralNetwork;
     Supervisor *m_supervisor, *m_initSupervisor;
+    ActivationFunctionPointer m_activationFunction;
 };
