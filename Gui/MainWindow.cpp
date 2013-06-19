@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent):
     connect(recognitionController, &RecognitionController::recognized, ui->recognizedValue, &QComboBox::setCurrentText);
     connect(ui->gridSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), recognitionController, &RecognitionController::setSize);
     connect(ui->gridField, &GridField::dataChanged, recognitionController, &RecognitionController::setData);
+    connect(recognitionController, &RecognitionController::unrecognized, [this](){ ui->recognizedValue->setCurrentIndex(-1); });
 }
 
 MainWindow::~MainWindow()
