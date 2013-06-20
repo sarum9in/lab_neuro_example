@@ -30,6 +30,8 @@ public slots:
 
     void train();
 
+    void detach();
+
 private:
     void update();
 

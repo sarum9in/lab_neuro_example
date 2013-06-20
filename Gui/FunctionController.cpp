@@ -82,6 +82,12 @@ void FunctionController::train()
     }
 }
 
+void FunctionController::detach()
+{
+    m_originalFunction->detach();
+    m_neuralFunction->detach();
+}
+
 constexpr int STEPS = 1000;
 
 void FunctionController::update()
