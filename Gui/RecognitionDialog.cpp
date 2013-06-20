@@ -18,4 +18,3 @@ QString RecognitionDialog::correctSymbol() const
 {
     return ui->correctSymbol->currentText();
 }
-
