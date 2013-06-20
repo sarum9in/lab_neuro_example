@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui script
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -20,14 +20,16 @@ SOURCES += main.cpp\
     RecognitionController.cpp \
     RecognitionDialog.cpp \
     ReadOnlyCheckBox.cpp \
-    BooleanController.cpp
+    BooleanController.cpp \
+    FunctionController.cpp
 
 HEADERS  += MainWindow.hpp \
     GridField.hpp \
     RecognitionController.hpp \
     RecognitionDialog.hpp \
     ReadOnlyCheckBox.hpp \
-    BooleanController.hpp
+    BooleanController.hpp \
+    FunctionController.hpp
 
 FORMS    += MainWindow.ui \
     RecognitionDialog.ui
