@@ -19,13 +19,15 @@ SOURCES += main.cpp\
     GridField.cpp \
     RecognitionController.cpp \
     RecognitionDialog.cpp \
-    ReadOnlyCheckBox.cpp
+    ReadOnlyCheckBox.cpp \
+    BooleanController.cpp
 
 HEADERS  += MainWindow.hpp \
     GridField.hpp \
     RecognitionController.hpp \
     RecognitionDialog.hpp \
-    ReadOnlyCheckBox.hpp
+    ReadOnlyCheckBox.hpp \
+    BooleanController.hpp
 
 FORMS    += MainWindow.ui \
     RecognitionDialog.ui
