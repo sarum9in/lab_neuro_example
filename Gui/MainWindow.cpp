@@ -3,6 +3,7 @@
 
 #include "BooleanController.hpp"
 #include "RecognitionController.hpp"
+#include "FunctionController.hpp"
 
 #include <QMessageBox>
 
@@ -36,6 +37,20 @@ MainWindow::MainWindow(QWidget *parent):
     connect(ui->gridSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), recognitionController, &RecognitionController::setSize);
     connect(ui->gridField, &GridField::dataChanged, recognitionController, &RecognitionController::setData);
     connect(recognitionController, &RecognitionController::unrecognized, [this](){ ui->recognizedValue->setCurrentIndex(-1); });
+    // Function
+    FunctionController *functionController = new FunctionController(ui->functionPlot, this);
+    const auto setShowOriginalFunction = [functionController](const int state) { functionController->setShowOriginalFunction(state == Qt::Checked); };
+    const auto setShowNeuralFunction = [functionController](const int state) { functionController->setShowNeuralFunction(state == Qt::Checked); };
+    setShowOriginalFunction(ui->showOriginalFunction->checkState());
+    setShowNeuralFunction(ui->showNeuralFunction->checkState());
+    connect(ui->showOriginalFunction, &QCheckBox::stateChanged, setShowOriginalFunction);
+    connect(ui->showNeuralFunction, &QCheckBox::stateChanged, setShowNeuralFunction);
+    functionController->setMinX(ui->functionMinX->value());
+    functionController->setMaxX(ui->functionMaxX->value());
+    connect(ui->functionMinX, static_cast<void (QDoubleSpinBox::*)(qreal)>(&QDoubleSpinBox::valueChanged), functionController, &FunctionController::setMinX);
+    connect(ui->functionMaxX, static_cast<void (QDoubleSpinBox::*)(qreal)>(&QDoubleSpinBox::valueChanged), functionController, &FunctionController::setMaxX);
+    connect(ui->trainFunctionButton, &QPushButton::clicked, [this, functionController](){ functionController->setScript(ui->script->toPlainText()); functionController->train(); });
+    connect(functionController, &FunctionController::scriptError, [this](const QString &error){ QMessageBox::warning(this, tr("Script error"), error); });
 }
 
 MainWindow::~MainWindow()
