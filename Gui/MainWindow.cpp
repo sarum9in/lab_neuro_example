@@ -1,6 +1,7 @@
 #include "MainWindow.hpp"
 #include "ui_MainWindow.h"
 
+#include "BooleanController.hpp"
 #include "RecognitionController.hpp"
 
 #include <QMessageBox>
@@ -10,6 +11,18 @@ MainWindow::MainWindow(QWidget *parent):
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    // Boolean
+    BooleanController *booleanController = new BooleanController(this);
+    // TODO ui->trainBooleanButton
+    const auto setX = [booleanController](const int state) { booleanController->setX(state == Qt::Checked); };
+    const auto setY = [booleanController](const int state) { booleanController->setY(state == Qt::Checked); };
+    const auto setResult = [this](const bool result) { ui->booleanResult->setCheckState(result ? Qt::Checked : Qt::Unchecked); };
+    setX(ui->booleanX->checkState());
+    setY(ui->booleanY->checkState());
+    setResult(booleanController->result());
+    connect(ui->booleanX, &QCheckBox::stateChanged, setX);
+    connect(ui->booleanY, &QCheckBox::stateChanged, setY);
+    connect(booleanController, &BooleanController::resultChanged, setResult);
     // Recognition
     RecognitionController *recognitionController = new RecognitionController(this);
     ui->gridField->setSize(ui->gridSize->value());

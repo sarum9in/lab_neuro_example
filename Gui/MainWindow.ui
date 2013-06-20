@@ -18,12 +18,127 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="booleanTab">
        <attribute name="title">
         <string>Boolean</string>
        </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Training set</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="ReadOnlyCheckBox" name="x_0_y_0">
+            <property name="text">
+             <string>x=0 y=0</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="ReadOnlyCheckBox" name="x_0_y_1">
+            <property name="text">
+             <string>x=0 y=1</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="ReadOnlyCheckBox" name="x_1_y_0">
+            <property name="text">
+             <string>x=1 y=0</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="ReadOnlyCheckBox" name="x_1_y_1">
+            <property name="text">
+             <string>x=1 y=1</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCommandLinkButton" name="trainBooleanButton">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Train</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>Execution</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="booleanX">
+            <property name="text">
+             <string>x</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="booleanY">
+            <property name="text">
+             <string>y</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="ReadOnlyCheckBox" name="booleanResult">
+            <property name="text">
+             <string>result</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="recognitionTab">
        <attribute name="title">
@@ -160,6 +275,11 @@
    <slots>
     <slot>setSize(int)</slot>
    </slots>
+  </customwidget>
+  <customwidget>
+   <class>ReadOnlyCheckBox</class>
+   <extends>QCheckBox</extends>
+   <header>ReadOnlyCheckBox.hpp</header>
   </customwidget>
  </customwidgets>
  <resources/>
