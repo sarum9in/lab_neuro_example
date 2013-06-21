@@ -129,7 +129,7 @@ void FunctionController::update()
     const qreal endX = qMax(m_minX, m_maxX);
     const qreal diffX = endX - beginX;
     const qreal dx = diffX / STEPS;
-    m_neuralNetworkYScale = 0;
+    qreal minY, maxY;
 
     QVector<QPointF> originalData(STEPS + 1);
     for (int i = 0; i <= STEPS; ++i)
@@ -148,8 +148,19 @@ void FunctionController::update()
         const qreal y = scriptY.toNumber();
 
         originalData[i].setY(y);
-        m_neuralNetworkYScale = qMax(m_neuralNetworkYScale, qAbs(y));
+
+        if (i)
+        {
+            minY = qMin(minY, y);
+            maxY = qMax(maxY, y);
+        }
+        else
+        {
+            minY = maxY = y;
+        }
     }
+
+    setOriginalNeuralScale(minY, maxY);
 
     m_originalFunction->setSamples(originalData);
 
@@ -157,7 +168,7 @@ void FunctionController::update()
     for (int i = 0; i < originalData.size(); ++i)
     {
         trainingSet[i].input.fill(originalData[i].x(), 1);
-        trainingSet[i].output.fill(originalData[i].y() / m_neuralNetworkYScale, 1);
+        trainingSet[i].output.fill(originalToNeural(originalData[i].y()), 1);
     }
 
     m_initSupervisor->train(m_neuralNetwork);
@@ -174,11 +185,27 @@ void FunctionController::update()
         const DataVector input = {x};
         const DataVector output = m_neuralNetwork.transform(input);
         Q_ASSERT(output.size() == 1);
-        neuralData[i].setY(output.first() * m_neuralNetworkYScale);
+        neuralData[i].setY(neuralToOriginal(output.first()));
     }
 
     m_neuralFunction->setSamples(neuralData);
 
     m_valid = true;
     m_plot->replot();
+}
+
+qreal FunctionController::neuralToOriginal(const qreal y) const
+{
+    return y * m_neuralNetworkYScale + m_neuralNetworkYBias;
+}
+
+qreal FunctionController::originalToNeural(const qreal y) const
+{
+    return (y - m_neuralNetworkYBias) / m_neuralNetworkYScale;
+}
+
+void FunctionController::setOriginalNeuralScale(const qreal minY, const qreal maxY)
+{
+    m_neuralNetworkYBias = (maxY + minY) / 2;
+    m_neuralNetworkYScale = m_neuralNetworkYBias - minY;
 }

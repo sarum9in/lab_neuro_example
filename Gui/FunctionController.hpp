@@ -41,6 +41,10 @@ public slots:
 private:
     void update();
 
+    qreal neuralToOriginal(const qreal y) const;
+    qreal originalToNeural(const qreal y) const;
+    void setOriginalNeuralScale(const qreal minY, const qreal maxY);
+
 private:
     QScriptEngine *m_scriptEngine;
     QwtPlot *m_plot;
@@ -50,6 +54,6 @@ private:
     QScriptValue m_function;
     bool m_valid;
     NeuralNetwork m_neuralNetwork;
-    qreal m_neuralNetworkYScale;
+    qreal m_neuralNetworkYScale, m_neuralNetworkYBias;
     Supervisor *m_initSupervisor, *m_supervisor;
 };
