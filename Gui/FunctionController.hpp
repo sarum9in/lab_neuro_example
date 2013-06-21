@@ -1,5 +1,8 @@
 #pragma once
 
+#include "NeuralNetwork.hpp"
+#include "Supervisor.hpp"
+
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
 
@@ -43,4 +46,7 @@ private:
     QString m_script;
     QScriptValue m_function;
     bool m_valid;
+    NeuralNetwork m_neuralNetwork;
+    qreal m_neuralNetworkYScale;
+    Supervisor *m_initSupervisor, *m_supervisor;
 };
