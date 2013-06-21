@@ -52,6 +52,12 @@ MainWindow::MainWindow(QWidget *parent):
     connect(ui->trainFunctionButton, &QPushButton::clicked, [this, functionController](){ functionController->setScript(ui->script->toPlainText()); functionController->train(); });
     connect(functionController, &FunctionController::scriptError, [this](const QString &error){ QMessageBox::warning(this, tr("Script error"), error); });
     connect(this, &QObject::destroyed, functionController, &FunctionController::detach);
+    // set colors
+    {
+        QPen pen = functionController->neuralFunction()->pen();
+        pen.setColor(Qt::red);
+        functionController->neuralFunction()->setPen(pen);
+    }
 }
 
 MainWindow::~MainWindow()
