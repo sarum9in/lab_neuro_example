@@ -43,6 +43,16 @@ FunctionController::~FunctionController()
     delete m_neuralFunction;
 }
 
+QwtPlotCurve *FunctionController::originalFunction()
+{
+    return m_originalFunction;
+}
+
+QwtPlotCurve *FunctionController::neuralFunction()
+{
+    return m_neuralFunction;
+}
+
 void FunctionController::setMinX(const qreal minX)
 {
     m_minX = minX;

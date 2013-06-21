@@ -17,6 +17,9 @@ public:
     /// \param plot Does not take ownership.
     explicit FunctionController(QwtPlot *plot, QObject *parent=nullptr);
 
+    QwtPlotCurve *originalFunction();
+    QwtPlotCurve *neuralFunction();
+
     ~FunctionController();
 
 signals:
