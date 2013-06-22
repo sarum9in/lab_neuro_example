@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     RecognitionDialog.cpp \
     ReadOnlyCheckBox.cpp \
     BooleanController.cpp \
-    FunctionController.cpp
+    FunctionController.cpp \
+    TrainingDialog.cpp
 
 HEADERS  += MainWindow.hpp \
     GridField.hpp \
@@ -29,10 +30,12 @@ HEADERS  += MainWindow.hpp \
     RecognitionDialog.hpp \
     ReadOnlyCheckBox.hpp \
     BooleanController.hpp \
-    FunctionController.hpp
+    FunctionController.hpp \
+    TrainingDialog.hpp
 
 FORMS    += MainWindow.ui \
-    RecognitionDialog.ui
+    RecognitionDialog.ui \
+    TrainingDialog.ui
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../neuro/release/ -lneuro
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../neuro/debug/ -lneuro
