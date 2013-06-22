@@ -246,5 +246,8 @@ qreal FunctionController::originalToNeural(const qreal y) const
 void FunctionController::setOriginalNeuralScale(const qreal minY, const qreal maxY)
 {
     m_neuralNetworkYBias = minY;
-    m_neuralNetworkYScale = 1.1 * (maxY - minY);
+    if (maxY - minY < 1e-5)
+        m_neuralNetworkYScale = 1;
+    else
+        m_neuralNetworkYScale = 1.1 * (maxY - minY);
 }
