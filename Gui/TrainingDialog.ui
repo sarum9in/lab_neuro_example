@@ -20,7 +20,7 @@
       <number>24</number>
      </property>
      <property name="format">
-      <string>Iterations %p% %v%/%m%</string>
+      <string>Iterations %p% %v/%m</string>
      </property>
     </widget>
    </item>
