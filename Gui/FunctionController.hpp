@@ -1,7 +1,7 @@
 #pragma once
 
 #include "NeuralNetwork.hpp"
-#include "Supervisor.hpp"
+#include "ThreadedSupervisor.hpp"
 
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
@@ -25,6 +25,11 @@ public:
 signals:
     void scriptError(const QString &error);
 
+    void started(const int count);
+    void finished(const bool result);
+    void targetErrorInfo(const qreal targetError, const qreal currentError, const qreal bestError);
+    void iterationInfo(const int currentIteration, const int maxIterations);
+
 public slots:
     void setMinX(const qreal minX);
     void setMaxX(const qreal maxX);
@@ -41,6 +46,8 @@ public slots:
     void setOriginalSteps(const int originalSteps);
     void setNeuralSteps(const int neuralSteps);
     void setNeurons(const int neurons);
+
+    void setTrainingResult(const bool result, const NeuralNetwork &neuralNetwork);
 
 private:
     void update();
@@ -59,6 +66,6 @@ private:
     bool m_valid;
     NeuralNetwork m_neuralNetwork;
     qreal m_neuralNetworkYScale, m_neuralNetworkYBias;
-    Supervisor *m_initSupervisor, *m_supervisor;
+    ThreadedSupervisor *m_supervisor;
     int m_originalSteps, m_neuralSteps, m_neurons;
 };

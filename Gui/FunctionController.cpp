@@ -1,6 +1,5 @@
 #include "FunctionController.hpp"
 
-#include "RandomSupervisor.hpp"
 #include "BackpropagationSupervisor.hpp"
 #include "StochasticSupervisor.hpp"
 #include "LogSigmoidActivationFunction.hpp"
@@ -17,9 +16,13 @@ FunctionController::FunctionController(QwtPlot *plot, QObject *parent):
     m_neuralFunction(new QwtPlotCurve(tr("Neural function"))),
     m_valid(false),
     m_neuralNetworkYScale(1),
-    m_initSupervisor(new RandomSupervisor(-5, 5, this)),
-    m_supervisor(new StochasticSupervisor(this))
+    m_supervisor(new ThreadedSupervisor(new StochasticSupervisor(this), this))
 {
+    connect(m_supervisor, &ThreadedSupervisor::started, this, &FunctionController::started);
+    connect(m_supervisor, &ThreadedSupervisor::finished, this, &FunctionController::finished);
+    connect(m_supervisor, &ThreadedSupervisor::targetErrorInfo, this, &FunctionController::targetErrorInfo);
+    connect(m_supervisor, &ThreadedSupervisor::iterationInfo, this, &FunctionController::iterationInfo);
+    connect(m_supervisor, &ThreadedSupervisor::resultReady, this, &FunctionController::setTrainingResult);
     setOriginalSteps(STEPS);
     setNeuralSteps(3 * STEPS);
     setNeurons(STEPS / 3);
@@ -142,6 +145,30 @@ void FunctionController::setNeurons(const int neurons)
     m_neuralNetwork.setActivationFunction(ActivationFunctionPointer(new LogSigmoidActivationFunction(1)));
 }
 
+void FunctionController::setTrainingResult(const bool result, const NeuralNetwork &neuralNetwork)
+{
+    const qreal beginX = qMin(m_minX, m_maxX);
+    const qreal endX = qMax(m_minX, m_maxX);
+    const qreal diffX = endX - beginX;
+
+    m_neuralNetwork = neuralNetwork;
+    const qreal ndx = diffX / m_neuralSteps;
+    QVector<QPointF> neuralData(m_neuralSteps + 1);
+    for (int i = 0; i <= m_neuralSteps; ++i)
+    {
+        const qreal x = beginX + i * ndx;
+        neuralData[i].setX(x);
+        const DataVector input = {x};
+        const DataVector output = m_neuralNetwork.transform(input);
+        Q_ASSERT(output.size() == 1);
+        neuralData[i].setY(neuralToOriginal(output.first()));
+    }
+
+    m_neuralFunction->setSamples(neuralData);
+
+    m_plot->replot();
+}
+
 void FunctionController::update()
 {
     const qreal beginX = qMin(m_minX, m_maxX);
@@ -193,26 +220,8 @@ void FunctionController::update()
         trainingSet[i].output = {originalToNeural(originalData[i].y())};
     }
 
-    m_initSupervisor->train(m_neuralNetwork);
-    for (NeuralLayer &layer: m_neuralNetwork)
-        for (Neuron &neuron: layer)
-            neuron.setBias(0);
     m_supervisor->setTrainingSet(trainingSet);
     m_supervisor->trainFor(m_neuralNetwork, 1000 * 1000);
-
-    const qreal ndx = diffX / m_neuralSteps;
-    QVector<QPointF> neuralData(m_neuralSteps + 1);
-    for (int i = 0; i <= m_neuralSteps; ++i)
-    {
-        const qreal x = beginX + i * ndx;
-        neuralData[i].setX(x);
-        const DataVector input = {x};
-        const DataVector output = m_neuralNetwork.transform(input);
-        Q_ASSERT(output.size() == 1);
-        neuralData[i].setY(neuralToOriginal(output.first()));
-    }
-
-    m_neuralFunction->setSamples(neuralData);
 
     m_valid = true;
     m_plot->replot();
