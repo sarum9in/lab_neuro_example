@@ -108,6 +108,11 @@ void FunctionController::train()
     }
 }
 
+void FunctionController::abort()
+{
+    m_supervisor->abort();
+}
+
 void FunctionController::detach()
 {
     m_originalFunction->detach();

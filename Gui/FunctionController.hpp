@@ -40,6 +40,7 @@ public slots:
     void setScript(const QString &script);
 
     void train();
+    void abort();
 
     void detach();
 
