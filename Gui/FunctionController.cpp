@@ -145,6 +145,7 @@ void FunctionController::setNeurons(const int neurons)
         n2.setWeights(WeightVector(l1Size + 1));
         l2.pushBack(n2);
     }
+    m_neuralNetwork.clear();
     m_neuralNetwork.pushBack(l1);
     m_neuralNetwork.pushBack(l2);
     m_neuralNetwork.setActivationFunction(ActivationFunctionPointer(new LogSigmoidActivationFunction(1)));
