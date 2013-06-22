@@ -73,7 +73,7 @@ MainWindow::MainWindow(QWidget *parent):
     // Function training dialog
     connect(m_functionTrainingDialog, &TrainingDialog::aborted, functionController, &FunctionController::abort);
     connect(functionController, &FunctionController::started, m_functionTrainingDialog, &TrainingDialog::start);
-    connect(functionController, &FunctionController::finished, m_functionTrainingDialog, &TrainingDialog::finished);
+    connect(functionController, &FunctionController::finished, m_functionTrainingDialog, &TrainingDialog::finish);
     connect(functionController, &FunctionController::targetErrorInfo, m_functionTrainingDialog, &TrainingDialog::setTargetErrorInfo);
     connect(functionController, &FunctionController::iterationInfo, m_functionTrainingDialog, &TrainingDialog::setTterationInfo);
 }
