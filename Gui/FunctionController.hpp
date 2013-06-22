@@ -38,7 +38,8 @@ public slots:
 
     void detach();
 
-    void setSteps(const int steps);
+    void setOriginalSteps(const int originalSteps);
+    void setNeuralSteps(const int neuralSteps);
     void setNeurons(const int neurons);
 
 private:
@@ -59,5 +60,5 @@ private:
     NeuralNetwork m_neuralNetwork;
     qreal m_neuralNetworkYScale, m_neuralNetworkYBias;
     Supervisor *m_initSupervisor, *m_supervisor;
-    int m_steps, m_neurons;
+    int m_originalSteps, m_neuralSteps, m_neurons;
 };

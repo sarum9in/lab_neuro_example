@@ -52,9 +52,11 @@ MainWindow::MainWindow(QWidget *parent):
     connect(ui->trainFunctionButton, &QPushButton::clicked, [this, functionController](){ functionController->setScript(ui->script->toPlainText()); functionController->train(); });
     connect(functionController, &FunctionController::scriptError, [this](const QString &error){ QMessageBox::warning(this, tr("Script error"), error); });
     connect(this, &QObject::destroyed, functionController, &FunctionController::detach);
-    functionController->setSteps(ui->functionSteps->value());
+    functionController->setOriginalSteps(ui->functionOriginalSteps->value());
+    functionController->setNeuralSteps(ui->functionNeuralSteps->value());
     functionController->setNeurons(ui->functionNeurons->value());
-    connect(ui->functionSteps, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), functionController, &FunctionController::setSteps);
+    connect(ui->functionOriginalSteps, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), functionController, &FunctionController::setOriginalSteps);
+    connect(ui->functionNeuralSteps, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), functionController, &FunctionController::setNeuralSteps);
     connect(ui->functionNeurons, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), functionController, &FunctionController::setNeurons);
     // set colors
     {

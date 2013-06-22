@@ -20,7 +20,8 @@ FunctionController::FunctionController(QwtPlot *plot, QObject *parent):
     m_initSupervisor(new RandomSupervisor(-5, 5, this)),
     m_supervisor(new StochasticSupervisor(this))
 {
-    setSteps(STEPS);
+    setOriginalSteps(STEPS);
+    setNeuralSteps(3 * STEPS);
     setNeurons(STEPS / 3);
 }
 
@@ -110,9 +111,14 @@ void FunctionController::detach()
     m_neuralFunction->detach();
 }
 
-void FunctionController::setSteps(const int steps)
+void FunctionController::setOriginalSteps(const int originalSteps)
 {
-    m_steps = steps;
+    m_originalSteps = originalSteps;
+}
+
+void FunctionController::setNeuralSteps(const int neuralSteps)
+{
+    m_neuralSteps = neuralSteps;
 }
 
 void FunctionController::setNeurons(const int neurons)
@@ -141,11 +147,11 @@ void FunctionController::update()
     const qreal beginX = qMin(m_minX, m_maxX);
     const qreal endX = qMax(m_minX, m_maxX);
     const qreal diffX = endX - beginX;
-    const qreal dx = diffX / STEPS;
+    const qreal dx = diffX / m_originalSteps;
     qreal minY, maxY;
 
-    QVector<QPointF> originalData(STEPS + 1);
-    for (int i = 0; i <= STEPS; ++i)
+    QVector<QPointF> originalData(m_originalSteps + 1);
+    for (int i = 0; i <= m_originalSteps; ++i)
     {
         const qreal x = beginX + i * dx;
         originalData[i].setX(x);
@@ -194,10 +200,9 @@ void FunctionController::update()
     m_supervisor->setTrainingSet(trainingSet);
     m_supervisor->trainFor(m_neuralNetwork, 1000 * 1000);
 
-    constexpr int NSTEPS = STEPS * 3;
-    const qreal ndx = diffX / NSTEPS;
-    QVector<QPointF> neuralData(NSTEPS + 1);
-    for (int i = 0; i <= NSTEPS; ++i)
+    const qreal ndx = diffX / m_neuralSteps;
+    QVector<QPointF> neuralData(m_neuralSteps + 1);
+    for (int i = 0; i <= m_neuralSteps; ++i)
     {
         const qreal x = beginX + i * ndx;
         neuralData[i].setX(x);

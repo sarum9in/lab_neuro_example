@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>675</width>
-    <height>665</height>
+    <width>781</width>
+    <height>699</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="booleanTab">
        <attribute name="title">
@@ -389,15 +389,8 @@
               </property>
              </widget>
             </item>
-            <item row="5" column="0">
-             <widget class="QLabel" name="label_6">
-              <property name="text">
-               <string>Steps</string>
-              </property>
-             </widget>
-            </item>
             <item row="5" column="1">
-             <widget class="QSpinBox" name="functionSteps">
+             <widget class="QSpinBox" name="functionOriginalSteps">
               <property name="minimum">
                <number>10</number>
               </property>
@@ -409,14 +402,21 @@
               </property>
              </widget>
             </item>
-            <item row="5" column="2">
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_6">
+              <property name="text">
+               <string>Original steps</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
              <widget class="QLabel" name="label_7">
               <property name="text">
                <string>Neurons</string>
               </property>
              </widget>
             </item>
-            <item row="5" column="3">
+            <item row="6" column="1">
              <widget class="QSpinBox" name="functionNeurons">
               <property name="minimum">
                <number>1</number>
@@ -426,6 +426,26 @@
               </property>
               <property name="value">
                <number>100</number>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="2">
+             <widget class="QLabel" name="label_10">
+              <property name="text">
+               <string>Neural steps</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="3">
+             <widget class="QSpinBox" name="functionNeuralSteps">
+              <property name="minimum">
+               <number>10</number>
+              </property>
+              <property name="maximum">
+               <number>5000</number>
+              </property>
+              <property name="value">
+               <number>150</number>
               </property>
              </widget>
             </item>
@@ -444,7 +464,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>675</width>
+     <width>781</width>
      <height>20</height>
     </rect>
    </property>
