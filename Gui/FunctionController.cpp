@@ -2,11 +2,12 @@
 
 #include "RandomSupervisor.hpp"
 #include "BackpropagationSupervisor.hpp"
+#include "StochasticSupervisor.hpp"
 #include "LogSigmoidActivationFunction.hpp"
 
 #include <QDebug>
 
-constexpr int STEPS = 1000;
+constexpr int STEPS = 400;
 
 FunctionController::FunctionController(QwtPlot *plot, QObject *parent):
     QObject(parent),
@@ -17,24 +18,10 @@ FunctionController::FunctionController(QwtPlot *plot, QObject *parent):
     m_valid(false),
     m_neuralNetworkYScale(1),
     m_initSupervisor(new RandomSupervisor(-5, 5, this)),
-    m_supervisor(new BackpropagationSupervisor(this))
+    m_supervisor(new StochasticSupervisor(this))
 {
-    NeuralLayer l1, l2;
-    const int l1Size = (0.6 * STEPS - 1 - 1) / 2;
-    for (int i = 0; i < l1Size; ++i)
-    {
-        Neuron n1i;
-        n1i.setWeights(WeightVector(2));
-        l1.pushBack(n1i);
-    }
-    {
-        Neuron n2;
-        n2.setWeights(WeightVector(l1Size + 1));
-        l2.pushBack(n2);
-    }
-    m_neuralNetwork.pushBack(l1);
-    m_neuralNetwork.pushBack(l2);
-    m_neuralNetwork.setActivationFunction(ActivationFunctionPointer(new LogSigmoidActivationFunction(1)));
+    setSteps(STEPS);
+    setNeurons(STEPS / 3);
 }
 
 FunctionController::~FunctionController()
@@ -123,6 +110,32 @@ void FunctionController::detach()
     m_neuralFunction->detach();
 }
 
+void FunctionController::setSteps(const int steps)
+{
+    m_steps = steps;
+}
+
+void FunctionController::setNeurons(const int neurons)
+{
+    m_neurons = neurons;
+    NeuralLayer l1, l2;
+    const int l1Size = m_neurons;
+    for (int i = 0; i < l1Size; ++i)
+    {
+        Neuron n1i;
+        n1i.setWeights(WeightVector(2));
+        l1.pushBack(n1i);
+    }
+    {
+        Neuron n2;
+        n2.setWeights(WeightVector(l1Size + 1));
+        l2.pushBack(n2);
+    }
+    m_neuralNetwork.pushBack(l1);
+    m_neuralNetwork.pushBack(l2);
+    m_neuralNetwork.setActivationFunction(ActivationFunctionPointer(new LogSigmoidActivationFunction(1)));
+}
+
 void FunctionController::update()
 {
     const qreal beginX = qMin(m_minX, m_maxX);
@@ -167,11 +180,17 @@ void FunctionController::update()
     TrainingVector trainingSet(originalData.size());
     for (int i = 0; i < originalData.size(); ++i)
     {
-        trainingSet[i].input.fill(originalData[i].x(), 1);
-        trainingSet[i].output.fill(originalToNeural(originalData[i].y()), 1);
+        qDebug() << minY << maxY << "|" << m_neuralNetworkYBias << m_neuralNetworkYScale <<
+                    "[" <<originalData[i].y() << originalToNeural(originalData[i].y()) << "]";
+        //trainingSet[i].input = {originalToNeural(originalData[i].x())};
+        trainingSet[i].input = {originalData[i].x()};
+        trainingSet[i].output = {originalToNeural(originalData[i].y())};
     }
 
     m_initSupervisor->train(m_neuralNetwork);
+    for (NeuralLayer &layer: m_neuralNetwork)
+        for (Neuron &neuron: layer)
+            neuron.setBias(0);
     m_supervisor->setTrainingSet(trainingSet);
     m_supervisor->trainFor(m_neuralNetwork, 1000 * 1000);
 
@@ -206,6 +225,6 @@ qreal FunctionController::originalToNeural(const qreal y) const
 
 void FunctionController::setOriginalNeuralScale(const qreal minY, const qreal maxY)
 {
-    m_neuralNetworkYBias = (maxY + minY) / 2;
-    m_neuralNetworkYScale = m_neuralNetworkYBias - minY;
+    m_neuralNetworkYBias = minY;
+    m_neuralNetworkYScale = 1.1 * (maxY - minY);
 }
