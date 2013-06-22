@@ -9,7 +9,8 @@
 
 MainWindow::MainWindow(QWidget *parent):
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    m_functionTrainingDialog(new TrainingDialog(this))
 {
     ui->setupUi(this);
     // Boolean
@@ -49,7 +50,12 @@ MainWindow::MainWindow(QWidget *parent):
     functionController->setMaxX(ui->functionMaxX->value());
     connect(ui->functionMinX, static_cast<void (QDoubleSpinBox::*)(qreal)>(&QDoubleSpinBox::valueChanged), functionController, &FunctionController::setMinX);
     connect(ui->functionMaxX, static_cast<void (QDoubleSpinBox::*)(qreal)>(&QDoubleSpinBox::valueChanged), functionController, &FunctionController::setMaxX);
-    connect(ui->trainFunctionButton, &QPushButton::clicked, [this, functionController](){ functionController->setScript(ui->script->toPlainText()); functionController->train(); });
+    connect(ui->trainFunctionButton, &QPushButton::clicked,
+            [this, functionController]() {
+                functionController->setScript(ui->script->toPlainText());
+                functionController->train();
+                m_functionTrainingDialog->exec();
+            });
     connect(functionController, &FunctionController::scriptError, [this](const QString &error){ QMessageBox::warning(this, tr("Script error"), error); });
     connect(this, &QObject::destroyed, functionController, &FunctionController::detach);
     functionController->setOriginalSteps(ui->functionOriginalSteps->value());
@@ -64,6 +70,12 @@ MainWindow::MainWindow(QWidget *parent):
         pen.setColor(Qt::red);
         functionController->neuralFunction()->setPen(pen);
     }
+    // Function training dialog
+    connect(m_functionTrainingDialog, &TrainingDialog::aborted, functionController, &FunctionController::abort);
+    connect(functionController, &FunctionController::started, m_functionTrainingDialog, &TrainingDialog::start);
+    connect(functionController, &FunctionController::finished, m_functionTrainingDialog, &TrainingDialog::finished);
+    connect(functionController, &FunctionController::targetErrorInfo, m_functionTrainingDialog, &TrainingDialog::setTargetErrorInfo);
+    connect(functionController, &FunctionController::iterationInfo, m_functionTrainingDialog, &TrainingDialog::setTterationInfo);
 }
 
 MainWindow::~MainWindow()

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "TrainingDialog.hpp"
+
 #include <QMainWindow>
 
 namespace Ui {
@@ -20,4 +22,5 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
+    TrainingDialog *m_functionTrainingDialog;
 };
