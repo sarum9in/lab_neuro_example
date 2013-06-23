@@ -1,0 +1,162 @@
+\documentclass[11pt]{article}
+\usepackage{xltxtra}
+\usepackage{polyglossia}
+\setdefaultlanguage[spelling=modern]{russian}
+%\setmainfont[Mapping=tex-text]{DejaVu Sans}
+%\setmainfont[Mapping=tex-text]{Liberation Sans}
+\setmonofont[Mapping=tex-text]{DejaVu Sans Mono}
+\setmainfont[Mapping=tex-text]{Linux Libertine O}
+%\setmonofont[Mapping=tex-text]{Liberation Mono}
+
+\usepackage{verbatim}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{url}
+
+\usepackage{indentfirst}
+
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+\usepackage[a4paper]{geometry}
+\geometry{left=25mm}
+\geometry{right=25mm}
+\geometry{top=25mm}
+\geometry{bottom=15mm}
+
+\usepackage{listings}
+
+\setlength{\parindent}{10mm}
+\makeatletter
+% Переопределение команды секции
+\renewcommand{\section}{\@startsection{section}{1}%
+{\parindent}{3.25ex plus 1ex minus .2ex}%
+{1.5ex plus .2ex}{\bfseries\large\uppercase}}
+
+% Переопределение команды подсекции
+\renewcommand{\subsection}{\@startsection{subsection}{2}%
+{\parindent}{3.25ex plus 1ex minus .2ex}%
+{1.5ex plus .2ex}{\bfseries}}
+\makeatother
+
+%\newcommand{\msection}[1]{\section[#1]{#1}}
+%\newcommand{\msection}[1]{\section[#1]{\uppercase{#1}}}
+
+%opening
+%\title{}
+%\author{Филиппов Алексей Николаевич}
+
+\newcommand{\titletext}{
+\Large Лабораторная работа №2\\*
+по дисциплине <<Методы организации нейронных сетей>>\\*
+на тему <<Перцептроны>>
+}
+
+\newcommand{\myvariant}{16}
+\newcommand{\mygroup}{6-78-11}
+
+\newcommand{\includepicture}[3]{
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+%\large{\textbf{#2}}
+\includegraphics[width=#3\textwidth]{#1}
+\end{center}
+\caption{#2}
+\end{figure}
+}
+
+\lstset{ %
+language=C++,                   % the language of the code
+basicstyle=\tiny,               % the size of the fonts that are used for the code
+numbers=left,                   % where to put the line-numbers
+numberstyle=\footnotesize,      % the size of the fonts that are used for the line-numbers
+stepnumber=2,                   % the step between two line-numbers. If it's 1, each line
+                                % will be numbered
+numbersep=5pt,                  % how far the line-numbers are from the code
+%backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
+showspaces=false,               % show spaces adding particular underscores
+showstringspaces=false,         % underline spaces within strings
+showtabs=false,                 % show tabs within strings adding particular underscores
+frame=single,                   % adds a frame around the code
+tabsize=2,                      % sets default tabsize to 2 spaces
+captionpos=b,                   % sets the caption-position to bottom
+breaklines=true,                % sets automatic line breaking
+breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+title=\lstname,                 % show the filename of files included with \lstinputlisting;
+                                % also try caption instead of title
+escapeinside={\%*}{*)},         % if you want to add a comment within your code
+morekeywords={*,...}            % if you want to add more keywords to the set
+}
+
+\begin{document}
+
+\include{title}
+
+\tableofcontents
+\pagebreak
+
+\section{Постановка задачи}
+
+\subsection{Задание 1}
+Реализовать с помощью перцептрона логическую функцию XOR.
+
+\subsection{Задание 2}
+Реализовать при помощи перцептрона распознавание изображений букв,
+заданных в виде набора пикселей на поле ввода фиксированного размера.
+Обучение произвести по дельта-правилу.
+
+\section{Архитектура приложения}
+Приложение состоит из двух частей:
+\begin{enumerate}
+    \item Библиотека, реализующая примитивы для работы с нейронными сетями.
+    \item Графический интерфейс пользователя.
+\end{enumerate}
+
+\section{Реализация}
+
+\newcommand{\includeclass}[2]{
+\subsubsection{#2}
+\lstinputlisting{include/#1.hpp}
+\lstinputlisting{src/#1.cpp}
+}
+
+\subsection{Нейрон и нейронная сеть}
+\includeclass{Neuron}{Нейрон}
+\includeclass{NeuralLayer}{Слой нейронной сети}
+\includeclass{NeuralNetwork}{Нейронная сеть}
+
+\subsection{Обучение}
+\includeclass{Supervisor}{Учитель}
+\includeclass{DeltaRuleSupervisor}{Учитель, обучающий по дельта-правилу}
+
+\subsection{Задание 1}
+Функция XOR реализуется следующим перцептроном:
+\includepicture{Task1NeuralNetwork}{Нейронная сеть}{1}
+
+В данном случае необходимо как минимум два слоя, так как функция не является линейно-разделимой.
+
+\subsection{Задание 2}
+Для реализации распознавания букв была строится однослойная нейронная сеть,
+содержащая столько же нейронов, сколько символов содержит распознаваемый алфавит.
+Входным вектором нейросети является таблица пикселов, содержащая образ буквы.
+В качестве функции активации используется пороговая (возвращает единицу если вход не меньше нуля).
+
+Для обучения сети используется дельта-правило. Данный метод получает в качестве аргументов
+ссылку на нейронную сеть и тестовый пример. После вычисления результата, который даёт нейронная сеть
+на входном векторе, производится коррекция весов с использованием выходного вектора-цели (в данной задаче вектор имеет размер 1).
+
+\section{Тестовые примеры}
+\includepicture{Task1100}{Задание 1, x = 0, y = 0}{1}
+\includepicture{Task1101}{Задание 1, x = 0, y = 1}{1}
+\includepicture{Task1110}{Задание 1, x = 1, y = 0}{1}
+\includepicture{Task1111}{Задание 1, x = 1, y = 1}{1}
+\includepicture{Task12ф}{Задание 2, буква ф}{1}
+\includepicture{Task12и}{Задание 2, буква и}{1}
+\includepicture{Task12л}{Задание 2, буква л}{1}
+\includepicture{Task12п}{Задание 2, буква п}{1}
+\includepicture{Task12о}{Задание 2, буква о}{1}
+\includepicture{Task12в}{Задание 2, буква в}{1}
+
+\end{document}
